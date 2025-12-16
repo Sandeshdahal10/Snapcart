@@ -1,5 +1,18 @@
+/**
+ * user.model.ts
+ * Mongoose User model and TypeScript IUser interface.
+ * Defines the shape of user documents and exports a cached Mongoose model.
+ */
+
 import mongoose from "mongoose";
 
+/** IUser
+ * Represents a user document in MongoDB.
+ * - _id: optional ObjectId assigned by MongoDB
+ * - name, email, password: required strings
+ * - mobile: optional contact number
+ * - role: one of 'user' | 'deliveryBoy' | 'admin'
+ */
 interface IUser {
   _id?: mongoose.Types.ObjectId;
   name: string;
@@ -9,6 +22,11 @@ interface IUser {
   role: "user" | "deliveryBoy" | "admin";
 }
 
+/**
+ * Mongoose schema for User.
+ * - Enforces required fields and unique email constraint.
+ * - Uses timestamps to track createdAt/updatedAt.
+ */
 const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
@@ -38,5 +56,6 @@ const userSchema = new mongoose.Schema<IUser>(
   { timestamps: true }
 );
 
+/** Export cached Mongoose model for User (prevents recompilation on hot reload). */
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 export default User;
