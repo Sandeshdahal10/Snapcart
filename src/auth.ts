@@ -1,3 +1,9 @@
+/**
+ * auth.ts
+ * NextAuth configuration using a Credentials provider.
+ * - Connects to MongoDB to validate user credentials.
+ * - Uses JWT session strategy and exposes user id, name, email and role in token/session.
+ */
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import connectDb from "./lib/db";
@@ -7,6 +13,13 @@ import bcrypt from "bcryptjs";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
+      /**
+       * Credentials provider fields and authorize flow.
+       * authorize():
+       * - connects to the DB
+       * - verifies email and password
+       * - returns a minimal user object { id, email, name, role } on success
+       */
       credentials: {
         email: { label: "email", type: "email" },
         password: { label: "Password", type: "password" },
@@ -35,7 +48,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    // token ko vitra user ko data halxa
+    /**
+     * jwt callback
+     * - Runs when a token is created/updated.
+     * - Copies authenticated user properties into the token.
+     */
     jwt({ token, user }) {
       if (user) {
         (token.id = user.id),
@@ -45,6 +62,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
+    /**
+     * session callback
+     * - Runs when a session is checked/created.
+     * - Attaches id, name, email, role from token to session.user.
+     */
     session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
