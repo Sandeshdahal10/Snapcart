@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
       {
         role,
         mobile,
-      }
+      },
+      { new: true }
     );
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 400 });
