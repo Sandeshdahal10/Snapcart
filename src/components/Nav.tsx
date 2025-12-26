@@ -1,7 +1,8 @@
-import { Search } from 'lucide-react';
+import { Search, ShoppingCartIcon, User } from 'lucide-react';
 import mongoose from 'mongoose';
 import Link from 'next/link';
 import React from 'react'
+import Image from 'next/image';
 interface IUser {
   _id?: mongoose.Types.ObjectId;
   name: string;
@@ -22,6 +23,15 @@ function Nav({user}:{user:IUser}) {
         <Search className='text-gray-500 w-5 h-5 mr-2'/>
         <input type="text" placeholder='Search groceries...' className='w-full outline-none text-gray-700 placeholder-gray-400' />
       </form>
+      <div className='flex items-center gap-3 md:gap-6 relative'>
+        <Link href={""} className='relative bg-white w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition rounded-full'>
+        <ShoppingCartIcon className='text-green-600 w-6 h-6'/>
+        <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-semibold shadow'>0</span>
+        </Link>
+        <div className='bg-white rounded-full w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform'>
+          {user.image?<Image src={user.image} alt='user' fill className='object-cover rounded-full'/>:<User/>}
+        </div>
+      </div>
     </div>
   )
 }
