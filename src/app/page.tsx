@@ -21,7 +21,7 @@ export default async function Home() {
 
   return (
     <>
-      <Nav />
+      <Nav user={user} />
     </>
   );
 }
