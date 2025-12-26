@@ -28,7 +28,7 @@ function Nav({user}:{user:IUser}) {
         <ShoppingCartIcon className='text-green-600 w-6 h-6'/>
         <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-semibold shadow'>0</span>
         </Link>
-        <div className='bg-white rounded-full w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform'>
+        <div className='bg-white rounded-full w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform relative'>
           {user.image?<Image src={user.image} alt='user' fill className='object-cover rounded-full'/>:<User/>}
         </div>
       </div>
