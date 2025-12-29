@@ -5,6 +5,16 @@ import { ArrowRight, Bike, ShoppingBasket } from "lucide-react";
 type propType = {
   nextStep: (s: number) => void;
 };
+
+/**
+ * Welcome landing component with animated branding and a "Next" action.
+ *
+ * Provides a brief introduction to the app and an animated button that calls
+ * the provided nextStep callback with the next step number when clicked.
+ *
+ * @param {Object} props
+ * @param {(s: number) => void} props.nextStep - Callback to advance the onboarding step
+ */
 function Welcome({ nextStep }: propType) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-linear-to-b from-green-100 to-white">
