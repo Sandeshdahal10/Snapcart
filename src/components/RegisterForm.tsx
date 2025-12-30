@@ -23,6 +23,17 @@ type propType = {
   previousStep: (s: number) => void;
 };
 
+/**
+ * RegisterForm component that renders the account creation form and handles
+ * registration flow (local register via API, Google sign-in, and navigation).
+ *
+ * - Validates name, email, and password (min length 6) before enabling submit.
+ * - Sends a POST to /api/auth/register on submit and redirects to /login on success.
+ * - Exposes a previousStep callback to return to the prior onboarding step.
+ *
+ * @param {Object} props
+ * @param {(s: number) => void} props.previousStep - Callback to go back to a specified step
+ */
 function RegisterForm({ previousStep }: propType) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
