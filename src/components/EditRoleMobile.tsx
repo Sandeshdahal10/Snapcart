@@ -4,6 +4,16 @@ import { motion } from "motion/react";
 import { ArrowRight, Bike, User, UserCog } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/dist/server/api-utils";
+
+/**
+ * EditRoleMobile component for mobile role selection and phone number submission.
+ *
+ * - Displays selectable roles (Admin, User, Delivery Boy) with icons.
+ * - Accepts a 10-digit mobile number and enables the submit button only when
+ *   a role is selected and the mobile number length equals 10.
+ * - Submits the selected role and mobile to /api/user/edit-role-mobile and
+ *   redirects to the home page on success.
+ */
 function EditRoleMobile() {
   const [roles, setRoles] = useState([
     { id: "admin", label: "Admin", icon: UserCog },
