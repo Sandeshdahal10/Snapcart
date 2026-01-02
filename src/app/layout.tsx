@@ -9,6 +9,18 @@ export const metadata: Metadata = {
   description: "10 minutes grocery Delivery App",
 };
 
+/**
+ * RootLayout
+ *
+ * Application root layout that:
+ * - Defines global metadata for the app.
+ * - Loads global styles.
+ * - Wraps all pages with the authentication/session Provider so session
+ *   context is available throughout the client.
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - The page content to render inside the layout
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
