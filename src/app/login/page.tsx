@@ -15,6 +15,14 @@ import googleImage from "@/assets/Google.png";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 
+/**
+ * Login component (client).
+ *
+ * - Renders email/password form and Google sign-in option.
+ * - Handles form submission via next-auth's signIn (credentials) and redirects
+ *   to the app root on success.
+ * - Shows a loading state while authentication is in progress.
+ */
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
