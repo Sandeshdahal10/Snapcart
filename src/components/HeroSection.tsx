@@ -1,7 +1,9 @@
+'use client'
 import { Leaf, Smartphone, Truck } from 'lucide-react'
-import { sub } from 'motion/react-client'
-import React from 'react'
-
+import { AnimatePresence } from 'motion/react'
+import React, { useEffect, useState } from 'react'
+import {motion} from "motion/react"
+import Image from 'next/image'
 function HeroSection() {
   const slides=[{
     id:1,
@@ -27,9 +29,33 @@ function HeroSection() {
     btnText:"Get Started",
     bg:"https://plus.unsplash.com/premium_photo-1663091378026-7bee6e1c7247?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 }]
+const [currentSlide,setCurrentSlide]=useState(0);
+useEffect(()=>{
+ const timer = setInterval(()=>{
+    setCurrentSlide((prev)=>(prev+1) %(slides.length))
+  },4000)
+  return ()=> clearInterval(timer)
+},[])
   return (
-    <div>
-
+    <div className='relative  w-[98%] mx-auto mt-32 h-[80vh] rounded-3xl overflow-hidden shadow-2xl'>
+      <AnimatePresence mode='wait'>
+      <motion.div
+      initial={{opacity:0}}
+      animate={{opacity:1}}
+      transition={{duration:0.8}}
+      exit={{opacity:0}}
+      className='absolute inset-0'
+      >
+      <Image
+      src={slides[currentSlide]?.bg}
+      fill
+      alt='slides'
+      priority
+      />
+        
+      
+      </motion.div>
+      </AnimatePresence>
     </div>
   )
 }
