@@ -4,8 +4,8 @@ import { motion } from "motion/react";
 import { ArrowRight, Bike, User, UserCog } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/dist/server/api-utils";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 /**
  * EditRoleMobile component for mobile role selection and phone number submission.
