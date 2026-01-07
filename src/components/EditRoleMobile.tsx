@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Bike, User, UserCog } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/router";
 
 /**
  * EditRoleMobile component for mobile role selection and phone number submission.
@@ -22,13 +23,15 @@ function EditRoleMobile() {
   ]);
   const [selectedRole, setSelectedRole] = useState("");
   const [mobile, setMobile] = useState("");
+  const router=useRouter();
   const handleEdit = async () => {
     try {
       const result = await axios.post("/api/user/edit-role-mobile", {
         role: selectedRole,
         mobile,
       });
-      redirect("/");
+      router.push("/");
+      
     } catch (error) {
       console.log(error);
     }
