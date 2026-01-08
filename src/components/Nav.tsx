@@ -61,15 +61,18 @@ function Nav({ user }: { user: IUser }) {
       >
         Snapcart
       </Link>
-      <form className="hidden md:flex items:center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
+      {user.role=="user" && <form className="hidden md:flex items:center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
         <Search className="text-gray-500 w-5 h-5 mr-2" />
         <input
           type="text"
           placeholder="Search groceries..."
           className="w-full outline-none text-gray-700 placeholder-gray-400"
         />
-      </form>
+      </form>}
+      
       <div className="flex items-center gap-3 md:gap-6 relative">
+
+        {user.role=="user" && <>
         <div
           className="bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition md:hidden"
           onClick={() => setSearchBarOpen((prev) => !prev)}
@@ -86,6 +89,8 @@ function Nav({ user }: { user: IUser }) {
             0
           </span>
         </Link>
+        </>}
+        
         <div className="relative" ref={profileDropDown}>
           <div
             className="bg-white rounded-full w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform "
