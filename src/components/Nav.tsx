@@ -146,15 +146,15 @@ function Nav({ user }: { user: IUser }) {
                     </div>
                   </div>
                 </div>
-
-                <Link
+                    {user.role=="user" && <Link
                   href={""}
                   className="flex items-center gap-2 px-3 py-3 hover:bg-green-50 rounded-lg text-gray-700 font-medium"
                   onClick={() => setOpen(false)}
                 >
                   <Package className="w-5 h-5 text-green-600" />
                   My Orders
-                </Link>
+                </Link> }
+                
                 <button
                   className="flex items-center gap-2 w-full text-left px-3 py-3 hover:bg-red-50 rounded-lg text-gray-700 font-medium"
                   onClick={() => {
