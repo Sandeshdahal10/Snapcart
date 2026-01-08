@@ -2,7 +2,9 @@ import React from 'react'
 
 function DeliveryBoy() {
   return (
-    <div>DeliveryBoy</div>
+    <div>
+      
+    </div>
   )
 }
 
