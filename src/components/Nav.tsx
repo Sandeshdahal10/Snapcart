@@ -1,8 +1,12 @@
 "use client";
 import {
+  Boxes,
+  ClipboardCheckIcon,
   Cross,
   LogOut,
   Package,
+  Plus,
+  PlusCircle,
   Search,
   ShoppingCartIcon,
   User,
@@ -93,9 +97,12 @@ function Nav({ user }: { user: IUser }) {
         {user.role=="admin" &&
         <>
         <div className="hidden md:flex items-center gap-4">
-          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">Add Grocery</Link>
-          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">View Products</Link>
-          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">Manage Orders</Link>
+          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
+          <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
+          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
+          <Boxes className="w-5 h-5" /> View Products</Link>
+          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
+          <ClipboardCheckIcon className="w-5 h-5" /> Manage Orders</Link>
         </div>
         </>
         }
