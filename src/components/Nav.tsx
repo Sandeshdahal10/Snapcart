@@ -90,6 +90,15 @@ function Nav({ user }: { user: IUser }) {
           </span>
         </Link>
         </>}
+        {user.role=="admin" &&
+        <>
+        <div className="hidden md:flex items-center gap-4">
+          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">Add Grocery</Link>
+          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">View Products</Link>
+          <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">Manage Orders</Link>
+        </div>
+        </>
+        }
         
         <div className="relative" ref={profileDropDown}>
           <div
