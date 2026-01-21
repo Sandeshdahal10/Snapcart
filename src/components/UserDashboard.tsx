@@ -2,13 +2,19 @@ import React from 'react'
 import HeroSection from './HeroSection'
 import CategorySlider from './CategorySlider'
 import GroceryCard from './GroceryCard'
+import connectDb from '@/lib/db'
+import Grocery from '@/models/grocery.model'
 
-function UserDashboard() {
+ async function UserDashboard() {
+  await connectDb();
+  const groceries=await Grocery.find({}).lean()
   return (
     <>
     <HeroSection/>
     <CategorySlider/>
-    <GroceryCard/>
+    {groceries.map((items)=>(
+      <GroceryCard item={items}/>
+    ))}
     </>
   )
 }
