@@ -1,8 +1,10 @@
+// ...existing code...
 'use client'
 import { ArrowLeft, Plus, PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 import React, { ChangeEvent, useState } from 'react'
 import {motion} from "motion/react"
+import Image from 'next/image'
 
 const categories = [
         "Fruits & Vegetables",
@@ -60,12 +62,12 @@ function AddGrocery() {
         <form className='flex flex-col gap-6 w-full'>
          <div>
           <label className='block text-gray-700 font-medium mb-1'>Grocery Name<span className='text-red-500'>*</span></label>
-          <input type="text"  id="name" placeholder='eg:Sweets....' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={} />
+          <input type="text"  id="name" placeholder='eg:Sweets....' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={(e)=>setName(e.target.value)} value={name} />
          </div>
          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
           <div>
             <label className='block text-gray-700 font-medium mb-1'>Category<span className='text-red-500'>*</span></label>
-            <select name="category" className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all bg-white' onChange={(e)=>setCategory{e.target.value}} value={category}>
+            <select name="category" className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all bg-white' onChange={(e)=>setCategory(e.target.value)} value={category}>
               <option value="">Select Category</option>
               {categories.map(cat=>(
                 <option value={cat}>{cat}</option>
@@ -74,7 +76,7 @@ function AddGrocery() {
           </div>
           <div>
             <label className='block text-gray-700 font-medium mb-1'>Unit<span className='text-red-500'>*</span></label>
-            <select name="unit" className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all bg-white' onChange={(e)=>setUnit{e.target.value}} value={unit}>
+            <select name="unit" className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all bg-white' onChange={(e)=>setUnit(e.target.value)} value={unit}>
               <option value="">Select Unit</option>
               {units.map(unit=>(
                 <option value={unit}>{unit}</option>
@@ -84,11 +86,13 @@ function AddGrocery() {
          </div>
          <div>
           <label className='block text-gray-700 font-medium mb-1'>Price<span className='text-red-500'>*</span></label>
-          <input type="text"  id="price" placeholder='eg. Rs.100' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={(e)=>setPrice{e.target.value}} value={price} />
+          <input type="text"  id="price" placeholder='eg. Rs.100' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={(e)=>setPrice(e.target.value)} value={price} />
          </div>
-         <div>
+         <div className='flex flex-col sm:flex-row items-center gap-5'>
           <label htmlFor="image" className='block text-gray-700 font-medium mb-1'>Upload Image<span className='text-red-500'>*</span></label>
-          <input type="file" accept='image/*'  id="price" placeholder='eg. Rs.100' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={handle}/>
+          <input type="file" accept='image/*'  id="image" className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={handleImageChange}
+          />
+          {frontendImage && <Image src={frontendImage} width={100} height={100} className='rounded-xl shadow-md border border-gray-200 object-cover' alt='image'/>}
          </div>
         </form>
 
