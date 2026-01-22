@@ -95,6 +95,13 @@ function AddGrocery() {
           />
           {frontendImage && <Image src={frontendImage} width={100} height={100} className='rounded-xl shadow-md border border-gray-200 object-cover' alt='image'/>}
          </div>
+         <motion.button
+              whileHover={{scale:1.06}}
+              whileTap={{scale:0.98}}
+              className='mt-4 w-[30%] ml-50 bg-linear-to-r from-green-500 to-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl disabled:opacity-60 transition-all flex items-center justify-center gap-2'
+         >
+          Add Grocery
+         </motion.button>
         </form>
 
       </motion.div>
