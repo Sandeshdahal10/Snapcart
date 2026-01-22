@@ -1,6 +1,6 @@
 // ...existing code...
 'use client'
-import { ArrowLeft, Plus, PlusCircle } from 'lucide-react'
+import { ArrowLeft, Plus, PlusCircle, Upload } from 'lucide-react'
 import Link from 'next/link'
 import React, { ChangeEvent, useState } from 'react'
 import {motion} from "motion/react"
@@ -89,8 +89,9 @@ function AddGrocery() {
           <input type="text"  id="price" placeholder='eg. Rs.100' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={(e)=>setPrice(e.target.value)} value={price} />
          </div>
          <div className='flex flex-col sm:flex-row items-center gap-5'>
-          <label htmlFor="image" className='block text-gray-700 font-medium mb-1'>Upload Image<span className='text-red-500'>*</span></label>
-          <input type="file" accept='image/*'  id="image" className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all' onChange={handleImageChange}
+          <label htmlFor="image" className='cursor-pointer flex items-center justify-center gap-2 bg-green-50 text-green-700 font-semibold border border-green-200 rounded-xl px-6 py-3 hover:bg-green-100 transition-all w-full sm:w-auto'>
+            <Upload className='w-5 h-5'/>Upload Image</label>
+          <input type="file" id="image" accept='image/*'  hidden onChange={handleImageChange}
           />
           {frontendImage && <Image src={frontendImage} width={100} height={100} className='rounded-xl shadow-md border border-gray-200 object-cover' alt='image'/>}
          </div>
