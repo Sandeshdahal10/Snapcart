@@ -1,6 +1,9 @@
-'use client';
-import { SessionProvider } from 'next-auth/react';
-import React from 'react';
+"use client";
+import { SessionProvider } from "next-auth/react";
+
+import React from "react";
+import StoreProvider from "./redux/StoreProvider";
+
 
 /**
  * Provider component that wraps the application with next-auth's SessionProvider.
@@ -12,7 +15,11 @@ import React from 'react';
  * @param {React.ReactNode} props.children - React children to be wrapped by the session provider
  */
 function Provider({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider>
+      <StoreProvider>{children}</StoreProvider>
+    </SessionProvider>
+  );
 }
 
 export default Provider;
