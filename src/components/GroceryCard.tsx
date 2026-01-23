@@ -19,7 +19,7 @@ function GroceryCard({ item }: { item: IGrocery }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      viewport={{ once: false, amount: 0.5 }}
+      viewport={{ once: false, amount: 0.3 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeInOut" }}
       className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
