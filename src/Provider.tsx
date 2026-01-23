@@ -17,7 +17,7 @@ import StoreProvider from "./redux/StoreProvider";
 function Provider({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <StoreProvider>{children}</StoreProvider>
+      {children}
     </SessionProvider>
   );
 }
