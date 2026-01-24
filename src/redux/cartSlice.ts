@@ -25,9 +25,15 @@ const cartSlice = createSlice({
   reducers: {
     setCartData:(state, action:PayloadAction<IGrocery>) => {
       state.cartData.push(action.payload);
+    },
+    increaseQuantity:(state,action:PayloadAction<mongoose.Types.ObjectId>)=>{
+      const item=state.cartData.find(i=>i._id==action.payload)
+      if(item){
+        item.quantity=item.quantity + 1
+      }
     }
   },
 });
 
-export const { setCartData } = cartSlice.actions;
+export const { setCartData,increaseQuantity } = cartSlice.actions;
 export default cartSlice.reducer;
