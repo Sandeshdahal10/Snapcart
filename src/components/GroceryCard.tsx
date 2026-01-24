@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { PlusCircle } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { setCartData } from "@/redux/cartSlice";
 interface IGrocery {
   _id?: mongoose.Types.ObjectId;
   name: string;
@@ -16,6 +19,7 @@ interface IGrocery {
 }
 
 function GroceryCard({ item }: { item: IGrocery }) {
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <motion.div
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -50,6 +54,7 @@ function GroceryCard({ item }: { item: IGrocery }) {
         <motion.button
           className="mt-4 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-full duration-300 text-sm font-medium transition-all"
           whileTap={{ scale: 0.96 }}
+          onClick={() => dispatch(setCartData({...item, quantity: 1 }))}
         >
           <PlusCircle /> Add To cart
         </motion.button>
