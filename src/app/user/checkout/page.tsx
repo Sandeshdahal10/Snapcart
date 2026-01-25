@@ -1,10 +1,11 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {motion} from "motion/react"
-import { ArrowLeft, MapPin, User } from 'lucide-react'
+import { ArrowLeft, HomeIcon, MapPin, Phone, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import Home from '@/app/page'
 
 function Checkout() {
   const router=useRouter();
@@ -17,6 +18,7 @@ function Checkout() {
     pin:"",
     fullAddress:"",
   })
+
   return (
     <div className='w-[92%] md:w-[80%] mx-auto py-10 relative'>
       <motion.button
@@ -44,9 +46,17 @@ function Checkout() {
             Delivery Address
           </h2>
           <div className='space-y-4'>
-            <div className='relateive'>
+            <div className='relative'>
               <User className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" placeholder='Full Name' />
+              <input type="text" value={address.fullName} onChange={(e)=>setAddress({...address,fullName:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'/>
+            </div>
+            <div className='relative'>
+              <Phone className='absolute left-3 top-3 text-green-600' size={18}/>
+              <input type="text" value={address.mobile} onChange={(e)=>setAddress({...address,mobile:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'/>
+            </div>
+            <div className='relative'>
+              <HomeIcon className='absolute left-3 top-3 text-green-600' size={18}/>
+              <input type="text" value={address.fullAddress} onChange={(e)=>setAddress({...address,fullAddress:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'/>
             </div>
           </div>
           </motion.div>
