@@ -17,7 +17,22 @@ function Checkout() {
         <span>Back to Cart</span>
         
       </motion.button>
-      <h1 className='text-3xl md:text-4xl font-bold text-green-700 text-center mb-10'>Checkout</h1>
+      <motion.h1 className='text-3xl md:text-4xl font-bold text-green-700 text-center mb-10'
+      initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        >Checkout</motion.h1>
+        <div className='grid md:grid-cols-2 gap-8'>
+          <motion.div
+          className='bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100'
+          initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}>
+          <h2>
+            
+          </h2>
+          </motion.div>
+        </div>
     </div>
   )
 }
