@@ -1,11 +1,22 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import {motion} from "motion/react"
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MapPin, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 function Checkout() {
   const router=useRouter();
+  const {userData}=useSelector((state:RootState)=>state.user)
+  const [address,setAddress]=useState({
+    fullName:userData?.name,
+    mobile:userData?.mobile,
+    city:"",
+    state:"",
+    pin:"",
+    fullAddress:"",
+  })
   return (
     <div className='w-[92%] md:w-[80%] mx-auto py-10 relative'>
       <motion.button
@@ -28,9 +39,16 @@ function Checkout() {
           initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}>
-          <h2>
-            
+          <h2 className='text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2'>
+            <MapPin className='text-green-700'/>
+            Delivery Address
           </h2>
+          <div className='space-y-4'>
+            <div className='relateive'>
+              <User className='absolute left-3 top-3 text-green-600' size={18}/>
+              <input type="text" placeholder='Full Name' />
+            </div>
+          </div>
           </motion.div>
         </div>
     </div>
