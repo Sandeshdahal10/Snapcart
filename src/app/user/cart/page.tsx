@@ -76,6 +76,9 @@ function CartPage() {
               ))}
             </AnimatePresence>
           </div>
+          <motion.div>
+            
+          </motion.div>
         </div>
       )}
       
