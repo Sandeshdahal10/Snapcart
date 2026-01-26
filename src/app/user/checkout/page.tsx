@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import {motion} from "motion/react"
-import { ArrowLeft, HomeIcon, MapPin, Phone, User } from 'lucide-react'
+import { ArrowLeft, Building, HomeIcon, MapPin, Navigation, Phone, Search, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -48,15 +48,29 @@ function Checkout() {
           <div className='space-y-4'>
             <div className='relative'>
               <User className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.fullName} onChange={(e)=>setAddress({...address,fullName:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'/>
+              <input type="text" value={address.fullName} onChange={(e)=>setAddress({...address,fullName:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'  placeholder='Full Name'/>
             </div>
             <div className='relative'>
               <Phone className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.mobile} onChange={(e)=>setAddress({...address,mobile:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'/>
+              <input type="text" value={address.mobile} onChange={(e)=>setAddress({...address,mobile:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='Mobile Number'/>
             </div>
             <div className='relative'>
               <HomeIcon className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.fullAddress} onChange={(e)=>setAddress({...address,fullAddress:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'/>
+              <input type="text" value={address.fullAddress} onChange={(e)=>setAddress({...address,fullAddress:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='Full Address'/>
+            </div>
+            <div className='grid grid-cols-3 gap-3'>
+              <div className='relative'>
+              <Building className='absolute left-3 top-3 text-green-600' size={18}/>
+              <input type="text" value={address.city} onChange={(e)=>setAddress({...address,city:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='City'/>
+            </div>
+              <div className='relative'>
+              <Navigation className='absolute left-3 top-3 text-green-600' size={18}/>
+              <input type="text" value={address.state} onChange={(e)=>setAddress({...address,state:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='State'/>
+            </div>
+              <div className='relative'>
+              <Search className='absolute left-3 top-3 text-green-600' size={18}/>
+              <input type="text" value={address.pin} onChange={(e)=>setAddress({...address,pin:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='pin'/>
+            </div>
             </div>
           </div>
           </motion.div>
