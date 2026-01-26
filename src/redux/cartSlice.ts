@@ -46,8 +46,16 @@ const cartSlice = createSlice({
         state.cartData = state.cartData.filter((i) => i._id !== action.payload);
       }
     },
+    removeFromCart: (state, action: PayloadAction<mongoose.Types.ObjectId>) => {
+      state.cartData = state.cartData.filter((i) => i._id !== action.payload);
+    },
   },
 });
 
-export const { setCartData, increaseQuantity,decreaseQuantity } = cartSlice.actions;
+export const {
+  setCartData,
+  increaseQuantity,
+  decreaseQuantity,
+  removeFromCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;
