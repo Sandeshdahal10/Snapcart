@@ -1,5 +1,5 @@
 'use client'
-import { ArrowLeft, ShoppingBasket } from 'lucide-react'
+import { ArrowLeft, Minus, Plus, ShoppingBasket } from 'lucide-react'
 import Link from 'next/link'
 import {AnimatePresence, motion} from "motion/react"
 import React from 'react'
@@ -62,7 +62,13 @@ function CartPage() {
                     <p className='text-green-700 font-bold mt-1 text-sm sm:text-base'>${Number(item.price)*item.quantity}</p>
                   </div>
                   <div className='flex item-center justify-center sm:justigy-end gap-3 mt-3 sm:mt-0 bg-gray-50 px-3 py-2 rounded-full'>
-
+                  <button className='bg-white  p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200'>
+                    <Minus className='text-green-700' size={14}/>
+                    </button>
+                    <span className='font-semibold text-gray-800 w-6 text-center'>{item.quantity}</span>
+                    <button className='bg-white  p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200'>
+                      <Plus className='text-green-700' size={14}/>
+                  </button>
                   </div>
                 </motion.div>
               ))}
