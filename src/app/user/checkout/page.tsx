@@ -72,6 +72,10 @@ function Checkout() {
               <input type="text" value={address.pin} onChange={(e)=>setAddress({...address,pin:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='pin'/>
             </div>
             </div>
+            <div className='flex gap-2 mt-3'>
+              <input type="text" placeholder='Search Your city or area...' className='flex-1 border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none' />
+              <button className='bg-green-600 text-white px-5 rounded-lg hover:bg-green-700 transition-all font-medium'>Search</button>
+            </div>
           </div>
           </motion.div>
         </div>
