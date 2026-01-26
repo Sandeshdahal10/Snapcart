@@ -2,15 +2,16 @@
 import { ArrowLeft, Minus, Plus, ShoppingBasket } from 'lucide-react'
 import Link from 'next/link'
 import {AnimatePresence, motion} from "motion/react"
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
-import { div } from 'motion/react-client'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/redux/store'
+
 import Image from 'next/image'
+import { decreaseQuantity, increaseQuantity } from '@/redux/cartSlice'
 
 function CartPage() {
   const {cartData}=useSelector((state:RootState)=>state.cart)
-
+  const dispatch=useDispatch<AppDispatch>()
   return (
     <div className='w-[95%] sm:w-[90%] md:w-[80%] mx-auto mt-8 mb-24 relative'>
       <Link href={"/"} className='absolute -top-2 left-0 flex items-center gap-2 text-green-700 hover:text-green-800 font-medium transition-all'>
@@ -62,14 +63,15 @@ function CartPage() {
                     <p className='text-green-700 font-bold mt-1 text-sm sm:text-base'>${Number(item.price)*item.quantity}</p>
                   </div>
                   <div className='flex item-center justify-center sm:justigy-end gap-3 mt-3 sm:mt-0 bg-gray-50 px-3 py-2 rounded-full'>
-                  <button className='bg-white  p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200'>
+                  <button className='bg-white  p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200' onClick={()=>dispatch(decreaseQuantity(item._id))}>
                     <Minus className='text-green-700' size={14}/>
                     </button>
                     <span className='font-semibold text-gray-800 w-6 text-center'>{item.quantity}</span>
-                    <button className='bg-white  p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200'>
+                    <button className='bg-white  p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200' onClick={()=>dispatch(increaseQuantity(item._id))}>
                       <Plus className='text-green-700' size={14}/>
                   </button>
                   </div>
+                  
                 </motion.div>
               ))}
             </AnimatePresence>
