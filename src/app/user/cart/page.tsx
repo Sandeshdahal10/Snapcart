@@ -61,6 +61,9 @@ function CartPage() {
                     <p className='text-xs sm:text-sm text-gray-500'>{item.quantity}</p>
                     <p className='text-green-700 font-bold mt-1 text-sm sm:text-base'>${Number(item.price)*item.quantity}</p>
                   </div>
+                  <div className='flex item-center justify-center sm:justigy-end gap-3 mt-3 sm:mt-0 bg-gray-50 px-3 py-2 rounded-full'>
+
+                  </div>
                 </motion.div>
               ))}
             </AnimatePresence>
