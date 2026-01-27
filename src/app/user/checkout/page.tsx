@@ -18,6 +18,22 @@ function Checkout() {
     pin:"",
     fullAddress:"",
   })
+  const [position,setPosition]=useState<[number,number] | null>(null);
+
+  useEffect(()=>{
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          console.log('Geolocation position:', pos);
+          const { latitude, longitude } = pos.coords;
+          setPosition([latitude, longitude]);
+        },
+        (err) => {
+          console.error('Geolocation error:', err);
+        }
+      );
+    }
+  },[])
 
   return (
     <div className='w-[92%] md:w-[80%] mx-auto py-10 relative'>
