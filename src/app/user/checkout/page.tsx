@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Home from '@/app/page'
+import Map from '@/components/Map'
 
 function Checkout() {
   const router=useRouter();
@@ -95,6 +96,9 @@ function Checkout() {
             <div className='flex gap-2 mt-3'>
               <input type="text" placeholder='Search Your city or area...' className='flex-1 border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none' />
               <button className='bg-green-600 text-white px-5 rounded-lg hover:bg-green-700 transition-all font-medium'>Search</button>
+            </div>
+            <div className='relative mt-6 h-330px rounded-xl overflow-hidden border border-gray-200 shadow-inner'>
+              <Map position={position}/>
             </div>
           </div>
           </motion.div>
