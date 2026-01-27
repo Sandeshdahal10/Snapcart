@@ -11,8 +11,8 @@ function Checkout() {
   const router=useRouter();
   const {userData}=useSelector((state:RootState)=>state.user)
   const [address,setAddress]=useState({
-    fullName:userData?.name,
-    mobile:userData?.mobile,
+    fullName:"",
+    mobile:"",
     city:"",
     state:"",
     pin:"",
@@ -34,6 +34,10 @@ function Checkout() {
       );
     }
   },[])
+  useEffect(()=>{
+    setAddress((prev)=>({...prev,fullName:userData?.name || ""}))
+    setAddress((prev)=>({...prev,mobile:userData?.mobile || ""}))
+  },[userData])
 
   return (
     <div className='w-[92%] md:w-[80%] mx-auto py-10 relative'>
@@ -64,28 +68,28 @@ function Checkout() {
           <div className='space-y-4'>
             <div className='relative'>
               <User className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.fullName} onChange={(e)=>setAddress({...address,fullName:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'  placeholder='Full Name'/>
+              <input type="text" value={address.fullName} onChange={(e)=>setAddress((prev)=>({...prev,fullName:address.fullName}))} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50'  placeholder='Full Name'/>
             </div>
             <div className='relative'>
               <Phone className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.mobile} onChange={(e)=>setAddress({...address,mobile:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='Mobile Number'/>
+              <input type="text" value={address.mobile} onChange={(e)=>setAddress((prev)=>({...prev,mobile:address.mobile}))} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='Mobile Number'/>
             </div>
             <div className='relative'>
               <HomeIcon className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.fullAddress} onChange={(e)=>setAddress({...address,fullAddress:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='Full Address'/>
+              <input type="text" value={address.fullAddress} onChange={(e)=>setAddress((prev)=>({...prev,fullAddress:address.fullAddress}))}  className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='Full Address'/>
             </div>
             <div className='grid grid-cols-3 gap-3'>
               <div className='relative'>
               <Building className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.city} onChange={(e)=>setAddress({...address,city:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='City'/>
+              <input type="text" value={address.city} onChange={(e)=>setAddress((prev)=>({...prev,fullAddress:address.city}))}  className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='City'/>
             </div>
               <div className='relative'>
               <Navigation className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.state} onChange={(e)=>setAddress({...address,state:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='State'/>
+              <input type="text" value={address.state} onChange={(e)=>setAddress((prev)=>({...prev,state:address.state}))} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='State'/>
             </div>
               <div className='relative'>
               <Search className='absolute left-3 top-3 text-green-600' size={18}/>
-              <input type="text" value={address.pin} onChange={(e)=>setAddress({...address,pin:e.target.value})} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='pin'/>
+              <input type="text" value={address.pin} onChange={(e)=>setAddress((prev)=>({...prev,pin:address.pin}))} className='pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50' placeholder='pin'/>
             </div>
             </div>
             <div className='flex gap-2 mt-3'>
