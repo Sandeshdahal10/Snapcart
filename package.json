@@ -13,6 +13,7 @@
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.561.0",
     "mongoose": "^9.0.1",
     "motion": "^12.23.26",
