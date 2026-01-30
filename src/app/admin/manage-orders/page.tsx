@@ -1,4 +1,5 @@
 "use client";
+import AdminOrderCard from "@/components/AdminOrderCard";
 import { IOrder } from "@/models/order.model";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
@@ -32,8 +33,12 @@ function ManageOrders() {
           <h1 className="text-xl font-bold text-gray-800">Manage Orders</h1>
         </div>
       </div>
-      <div className="space-y-6">
-        {orders?.map((order,index) => ())}
+      <div className="max-w-6xl mx-auto px-4 pt-24 pb-16 space-y-8">
+        <div className="space-y-6">
+          {orders?.map((order, index) => (
+            <AdminOrderCard order={order} />
+          ))}
+        </div>
       </div>
     </div>
   );
