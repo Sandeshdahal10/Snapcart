@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import {
   ArrowLeft,
   Building,
+  CreditCard,
   HomeIcon,
   Loader2,
   LocateFixed,
@@ -11,6 +12,7 @@ import {
   Navigation,
   Phone,
   Search,
+  Truck,
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -43,6 +45,7 @@ function Checkout() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [position, setPosition] = useState<[number, number] | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"COD" | "Online">("COD");
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -305,6 +308,30 @@ function Checkout() {
                 <LocateFixed size={22} />
               </motion.button>
             </div>
+          </div>
+        </motion.div>
+        <motion.div
+        initial={{ opacity: 0, x:20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 h-fit"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2"><CreditCard className="text-green-600" />Payment Method</h2>
+          <div className="space-y-4 mb-6">
+              <button onClick={()=>setPaymentMethod("Online")} className={`flex items-center gap-3 w-full border rounded-lg p-3 transition-all ${
+                paymentMethod === "Online"
+                ? "border-green-600 bg-green-50 shadow-sm"
+                : "hover:bg-gray-50"
+              }`}>
+                <CreditCard className="text-green-600"/><span className="font-medium text-gray-700">Online Payment</span>
+              </button>
+              <button onClick={()=>setPaymentMethod("COD")} className={`flex items-center gap-3 w-full border rounded-lg p-3 transition-all ${
+                paymentMethod === "COD"
+                ? "border-green-600 bg-green-50 shadow-sm"
+                : "hover:bg-gray-50"
+              }`}>
+                <Truck className="text-green-600"/><span className="font-medium text-gray-700">Cash on Delivery</span>
+              </button>
           </div>
         </motion.div>
       </div>
