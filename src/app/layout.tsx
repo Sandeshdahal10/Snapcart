@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-linear-to-b from-green-50 to-white w-full min-h-[200vh]">
+      <body className="bg-linear-to-b from-green-50 to-white w-full min-h-screen">
         <Provider>
           <StoreProvider>
             <InitUser/>
