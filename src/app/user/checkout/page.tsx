@@ -5,6 +5,8 @@ import {
   ArrowLeft,
   Building,
   HomeIcon,
+  Loader2,
+  LocateFixed,
   MapPin,
   Navigation,
   Phone,
@@ -38,7 +40,8 @@ function Checkout() {
     pin: "",
     fullAddress: "",
   });
-  const [search,setSearch]=useState("");
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
   const [position, setPosition] = useState<[number, number] | null>(null);
 
   useEffect(() => {
@@ -62,10 +65,11 @@ function Checkout() {
   }, [userData]);
 
   const DraggableMarker: React.FC = () => {
-    const map=useMap();
-    useEffect(()=>{
-      map.setView(position as LatLngExpression,15,{animate:true});
-    }),[position, map]
+    const map = useMap();
+    (useEffect(() => {
+      map.setView(position as LatLngExpression, 15, { animate: true });
+    }),
+      [position, map]);
     return (
       <Marker
         icon={markerIcon}
@@ -83,23 +87,35 @@ function Checkout() {
   };
   useEffect(() => {
     const fetchAddress = async () => {
-      if(!position) return;
+      if (!position) return;
       try {
-        const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${position[0]}&lon=${position[1]}&format=json`)
-        console.log(result.data)
-      setAddress((prev)=>({...prev,city:result.data.address.city, state:result.data.address.state, pin:result.data.address.postcode, fullAddress:result.data.display_name}));
+        const result = await axios.get(
+          `https://nominatim.openstreetmap.org/reverse?lat=${position[0]}&lon=${position[1]}&format=json`,
+        );
+        console.log(result.data);
+        setAddress((prev) => ({
+          ...prev,
+          city: result.data.address.city,
+          state: result.data.address.state,
+          pin: result.data.address.postcode,
+          fullAddress: result.data.display_name,
+        }));
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    };
     fetchAddress();
-  },[position]);
+  }, [position]);
 
-const handleSearch=async ()=>{
-  const provider=new OpenStreetMapProvider();
-  const results = await provider.search({ query: search });
-  setPosition([results[0].y,results[0].x]);
-}
+  const handleSearch = async () => {
+    setLoading(true);
+    const provider = new OpenStreetMapProvider();
+    const results = await provider.search({ query: search });
+    if (results) {
+      setPosition([results[0].y, results[0].x]);
+      setLoading(false);
+    }
+  };
   return (
     <div className="w-[92%] md:w-[80%] mx-auto py-10 relative">
       <motion.button
@@ -141,7 +157,7 @@ const handleSearch=async ()=>{
                 onChange={(e) =>
                   setAddress((prev) => ({
                     ...prev,
-                    fullName: address.fullName,
+                    fullName: e.target.value,
                   }))
                 }
                 className="pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50"
@@ -157,7 +173,7 @@ const handleSearch=async ()=>{
                 type="text"
                 value={address.mobile}
                 onChange={(e) =>
-                  setAddress((prev) => ({ ...prev, mobile: address.mobile }))
+                  setAddress((prev) => ({ ...prev, mobile: e.target.value }))
                 }
                 className="pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50"
                 placeholder="Mobile Number"
@@ -174,7 +190,7 @@ const handleSearch=async ()=>{
                 onChange={(e) =>
                   setAddress((prev) => ({
                     ...prev,
-                    fullAddress: address.fullAddress,
+                    fullAddress: e.target.value,
                   }))
                 }
                 className="pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50"
@@ -193,7 +209,7 @@ const handleSearch=async ()=>{
                   onChange={(e) =>
                     setAddress((prev) => ({
                       ...prev,
-                      fullAddress: address.city,
+                      city: e.target.value,
                     }))
                   }
                   className="pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50"
@@ -209,7 +225,7 @@ const handleSearch=async ()=>{
                   type="text"
                   value={address.state}
                   onChange={(e) =>
-                    setAddress((prev) => ({ ...prev, state: address.state }))
+                    setAddress((prev) => ({ ...prev, state: e.target.value }))
                   }
                   className="pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50"
                   placeholder="State"
@@ -224,7 +240,7 @@ const handleSearch=async ()=>{
                   type="text"
                   value={address.pin}
                   onChange={(e) =>
-                    setAddress((prev) => ({ ...prev, pin: address.pin }))
+                    setAddress((prev) => ({ ...prev, pin: e.target.value }))
                   }
                   className="pl-10 w-full border rounded-lg p-3 text-sm bg-gray-50"
                   placeholder="pin"
@@ -237,10 +253,17 @@ const handleSearch=async ()=>{
                 placeholder="Search Your city or area..."
                 className="flex-1 border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none"
                 value={search}
-                onChange={(e)=>setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="bg-green-600 text-white px-5 rounded-lg hover:bg-green-700 transition-all font-medium" onClick={handleSearch}>
-                Search
+              <button
+                className="bg-green-600 text-white px-5 rounded-lg hover:bg-green-700 transition-all font-medium"
+                onClick={handleSearch}
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin" size={22} />
+                ) : (
+                  "Search"
+                )}
               </button>
             </div>
             <div className="relative mt-6 h-330px rounded-xl overflow-hidden border border-gray-200 shadow-inner">
@@ -258,6 +281,12 @@ const handleSearch=async ()=>{
                   <DraggableMarker />
                 </MapContainer>
               )}
+              <motion.button
+                className="absolute bottom-4 right-4 bg-green-600 text-white shadow-lg rounded-full p-3 hover:bg-green-700 transition-all flex items-center justify-center z-999"
+                whileTap={{ scale: 0.93 }}
+              >
+                <LocateFixed size={22} />
+              </motion.button>
             </div>
           </div>
         </motion.div>
