@@ -19,11 +19,11 @@ import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 import L, { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Marker } from "react-leaflet";
+import { Marker, useMap } from "react-leaflet";
 const markerIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/2642/2642502.png",
   iconSize: [40, 40],
-  iconAnchor:[20,40],
+  iconAnchor: [20, 40],
 });
 function Checkout() {
   const router = useRouter();
@@ -47,7 +47,8 @@ function Checkout() {
           setPosition([latitude, longitude]);
         },
         (err) => {
-          console.error("Geolocation error:", err),{enableHighAccuracy: true, maximumAge: 0, timeout: 10000};
+          (console.error("Geolocation error:", err),
+            { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
         },
       );
     }
@@ -56,6 +57,27 @@ function Checkout() {
     setAddress((prev) => ({ ...prev, fullName: userData?.name || "" }));
     setAddress((prev) => ({ ...prev, mobile: userData?.mobile || "" }));
   }, [userData]);
+
+  const DraggableMarker: React.FC = () => {
+    const map=useMap();
+    useEffect(()=>{
+      map.setView(position as LatLngExpression,15,{animate:true});
+    }),[position, map]
+    return (
+      <Marker
+        icon={markerIcon}
+        position={position as LatLngExpression}
+        draggable={true}
+        eventHandlers={{
+          dragend: (e: L.LeafletEvent) => {
+            const marker = e.target as L.Marker;
+            const { lat, lng } = marker.getLatLng();
+            setPosition([lat, lng]);
+          },
+        }}
+      />
+    );
+  };
 
   return (
     <div className="w-[92%] md:w-[80%] mx-auto py-10 relative">
@@ -210,7 +232,7 @@ function Checkout() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
-                  <Marker icon={markerIcon} position={position}/>
+                  <DraggableMarker />
                 </MapContainer>
               )}
             </div>
