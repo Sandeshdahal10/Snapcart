@@ -14,12 +14,17 @@ import {
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Home from "@/app/page";
-import Map from "@/components/Map";
+
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
-import { LatLngExpression } from "leaflet";
+import L, { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { Marker } from "react-leaflet";
+const markerIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/2642/2642502.png",
+  iconSize: [40, 40],
+  iconAnchor:[20,40],
+});
 function Checkout() {
   const router = useRouter();
   const { userData } = useSelector((state: RootState) => state.user);
@@ -198,13 +203,14 @@ function Checkout() {
                 <MapContainer
                   center={position as LatLngExpression}
                   zoom={13}
-                  scrollWheelZoom={false}
+                  scrollWheelZoom={true}
                   className="w-full h-[400px]"
                 >
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
+                  <Marker icon={markerIcon} position={position}/>
                 </MapContainer>
               )}
             </div>
