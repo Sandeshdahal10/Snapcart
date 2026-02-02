@@ -116,6 +116,22 @@ function Checkout() {
       setLoading(false);
     }
   };
+
+  const handleCurrentLocation= () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          console.log("Geolocation position:", pos);
+          const { latitude, longitude } = pos.coords;
+          setPosition([latitude, longitude]);
+        },
+        (err) => {
+          (console.error("Geolocation error:", err),
+            { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+        },
+      );
+    }
+  }
   return (
     <div className="w-[92%] md:w-[80%] mx-auto py-10 relative">
       <motion.button
@@ -283,7 +299,8 @@ function Checkout() {
               )}
               <motion.button
                 className="absolute bottom-4 right-4 bg-green-600 text-white shadow-lg rounded-full p-3 hover:bg-green-700 transition-all flex items-center justify-center z-999"
-                whileTap={{ scale: 0.93 }}
+                whileTap={{ scale: 0.93 }} 
+                onClick={handleCurrentLocation}
               >
                 <LocateFixed size={22} />
               </motion.button>
