@@ -20,6 +20,7 @@ import { TileLayer } from "react-leaflet/TileLayer";
 import L, { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Marker, useMap } from "react-leaflet";
+import axios from "axios";
 const markerIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/2642/2642502.png",
   iconSize: [40, 40],
@@ -78,6 +79,20 @@ function Checkout() {
       />
     );
   };
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if(!position) return;
+      try {
+        const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${position[0]}&lon=${position[1]}&format=json`)
+        console.log(result.data)
+      setAddress((prev)=>({...prev,city:result.data.address.city, state:result.data.address.state, pin:result.data.address.postcode, fullAddress:result.data.display_name}));
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchAddress();
+  },[position]);
+
 
   return (
     <div className="w-[92%] md:w-[80%] mx-auto py-10 relative">
