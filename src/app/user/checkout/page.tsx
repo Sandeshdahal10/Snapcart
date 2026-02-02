@@ -47,7 +47,7 @@ function Checkout() {
           setPosition([latitude, longitude]);
         },
         (err) => {
-          console.error("Geolocation error:", err);
+          console.error("Geolocation error:", err),{enableHighAccuracy: true, maximumAge: 0, timeout: 10000};
         },
       );
     }
