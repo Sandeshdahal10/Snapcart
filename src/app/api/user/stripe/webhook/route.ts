@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session;
     await connectDb();
     await Order.findByIdAndUpdate(session?.metadata?.orderId, {
-      ispaid: true,
+      isPaid: true,
     })
   }
   return NextResponse.json({received:true}, {status:200})
