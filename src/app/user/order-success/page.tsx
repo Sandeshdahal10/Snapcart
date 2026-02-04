@@ -68,7 +68,7 @@ function OrderSuccess() {
         transition={{ duration: 0.4, delay: 1.2 }}
         className="mt-12"
       >
-        <Link href={"/users/my-orders"}>
+        <Link href={"/user/my-orders"}>
           <motion.div
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.93 }}
