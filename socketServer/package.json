@@ -1,0 +1,20 @@
+{
+  "name": "socketserver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.13.4",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.1.6",
+    "nodemon": "^3.1.11",
+    "socket.io": "^4.8.3"
+  }
+}
