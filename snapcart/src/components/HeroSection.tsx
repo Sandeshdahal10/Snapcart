@@ -4,7 +4,12 @@ import { AnimatePresence } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { getSocket } from "@/lib/socket";
 function HeroSection() {
+  useEffect(() => {
+    let socket = getSocket();
+    
+  }, []);
   const slides = [
     {
       id: 1,
