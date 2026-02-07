@@ -31,7 +31,9 @@ interface IUser {
         type: NumberConstructor[];
         default: number[];
     };
-} 
+},
+socketId:string | null;
+isOnline?:boolean; 
 }
 
 /**
@@ -77,6 +79,14 @@ const userSchema = new mongoose.Schema<IUser>(
         type: [Number], // [longitude, latitude]
         default: [0, 0],
       }
+    },
+    socketId: {
+      type: String,
+      default: null,
+    },
+    isOnline: {
+      type: Boolean,
+      default: false,
     }
   },
   { timestamps: true }
