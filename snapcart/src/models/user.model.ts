@@ -13,7 +13,7 @@ import mongoose from "mongoose";
  * - mobile: optional contact number
  * - role: one of 'user' | 'deliveryBoy' | 'admin'
  */
-interface IUser {
+export interface IUser {
   _id?: mongoose.Types.ObjectId;
   name: string;
   email: string;
