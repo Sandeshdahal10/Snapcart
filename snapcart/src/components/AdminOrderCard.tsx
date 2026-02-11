@@ -1,5 +1,6 @@
 "use client";
-import { IOrder } from "@/models/order.model";
+
+import { IUser } from "@/models/user.model";
 import axios from "axios";
 import {
   ChevronDown,
@@ -10,24 +11,63 @@ import {
   Phone,
   Truck,
   User,
+  UserCheck,
 } from "lucide-react";
+import mongoose from "mongoose";
 import { motion } from "motion/react";
+import { div } from "motion/react-client";
 import Image from "next/image";
 import React, { use, useState } from "react";
+
+interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: [
+    {
+      grocery: mongoose.Types.ObjectId;
+      name: string;
+      price: string;
+      unit: string;
+      image: string;
+      quantity: number;
+    },
+  ];
+  isPaid: boolean;
+  totalPrice: number;
+  paymentMethod: "COD" | "Online";
+  address: {
+    fullName: string;
+    pincode: string;
+    city: string;
+    state: string;
+    mobile: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  assignedDeliveryBoy?: IUser;
+  assignment?: mongoose.Types.ObjectId;
+  status: "Pending" | "Out for Delivery" | "Delivered";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 function AdminOrderCard({ order }: { order: IOrder }) {
   const status = ["Pending", "Out for Delivery"];
   const [expanded, setExpanded] = useState(false);
-  const [orderStatus,setOrderStatus]=useState<string>(order.status);
-  const updateStatus=async (orderId:string,status:string)=>{
+  const [orderStatus, setOrderStatus] = useState<string>(order.status);
+  const updateStatus = async (orderId: string, status: string) => {
     try {
-      const result= await axios.post(`/api/auth/admin/update-order-status/${orderId}`,{status})
+      const result = await axios.post(
+        `/api/auth/admin/update-order-status/${orderId}`,
+        { status },
+      );
       console.log(result.data);
       setOrderStatus(status);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <motion.div
       key={order._id?.toString()}
@@ -77,6 +117,28 @@ function AdminOrderCard({ order }: { order: IOrder }) {
                 : "Online Payment"}
             </span>
           </p>
+
+          {order.assignedDeliveryBoy && (
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3 text-sm text-gray-700">
+                <UserCheck className="text-blue-600" size={16} />
+                <div className="font-semibold text-gray-800">
+                  <p className="text-xs text-gray-600">
+                    Assigned To: <span>{order.assignedDeliveryBoy?.name}</span>
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    📱+977{order.assignedDeliveryBoy?.mobile}
+                  </p>
+                </div>
+              </div>
+              <a
+                href={`tel:+977${order.assignedDeliveryBoy.mobile}`}
+                className=" shrink-0 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition"
+              >
+                Call
+              </a>
+            </div>
+          )}
         </div>
         <div className="flex flex-col items-start md:items-end gap-2">
           <span
@@ -90,12 +152,17 @@ function AdminOrderCard({ order }: { order: IOrder }) {
           >
             {orderStatus}
           </span>
-          <select className="border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none"
-          value={orderStatus}
-          onChange={(e)=>updateStatus(order._id?.toString()!,e.target.value)}
+          <select
+            className="border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none"
+            value={orderStatus}
+            onChange={(e) =>
+              updateStatus(order._id?.toString()!, e.target.value)
+            }
           >
             {status.map((stat) => (
-              <option key={stat} value={stat}>{stat.toUpperCase()}</option>
+              <option key={stat} value={stat}>
+                {stat.toUpperCase()}
+              </option>
             ))}
           </select>
         </div>
@@ -161,9 +228,7 @@ function AdminOrderCard({ order }: { order: IOrder }) {
           <Truck className="text-green-600" size={16} />
           <span>
             Delivery:{" "}
-            <span className="text-green-700 font-bold">
-              {orderStatus}
-            </span>{" "}
+            <span className="text-green-700 font-bold">{orderStatus}</span>{" "}
           </span>
         </div>
         <div>
