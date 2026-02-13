@@ -58,7 +58,7 @@ export async function proxy(req:NextRequest){
   return NextResponse.next();
 }
 export const config = {
-  matcher: '/((?!api/socket/connect|api/auth|api/user/stripe/webhook|_next/static|_next/image|favicon.ico).*)',
+  matcher: '/((?!api/socket/updateLocation|api/socket/connect|api/auth|api/user/stripe/webhook|_next/static|_next/image|favicon.ico).*)',
 }
 
 // req--------middlware-----allow-----server
