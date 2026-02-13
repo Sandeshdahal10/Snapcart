@@ -32,6 +32,7 @@ export async function POST(
           },
         },
       });
+
       const nearById = nearByDeliveryBoys.map((b) => b._id);
       const busyId = await DeliveryAssignment.find({
         assignedTo: { $in: nearById },
