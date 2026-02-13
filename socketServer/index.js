@@ -17,12 +17,14 @@ const io=new Server(server,{
   }
 })
 io.on("connection",(socket)=>{
-  console.log("User Connected",socket.id);
+  
   socket.on("identity",async (userId)=>{
-    console.log("User Identity Received:",userId);
+   
     await axios.post(`${process.env.NEXT_BASE_URL}/api/socket/connect`,{userId,socketId:socket.id})
   })
-  
+  socket.on("updateLocation",({userId,latitude,longitude})=>{
+    
+  })
   socket.on("disconnect",()=>{
     console.log("User Disconnected",socket.id);
   })
