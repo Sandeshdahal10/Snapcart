@@ -22,8 +22,12 @@ io.on("connection",(socket)=>{
    
     await axios.post(`${process.env.NEXT_BASE_URL}/api/socket/connect`,{userId,socketId:socket.id})
   })
-  socket.on("updateLocation",({userId,latitude,longitude})=>{
-    
+  socket.on("updateLocation",async ({userId,latitude,longitude})=>{
+    const locationData={
+      type:"Point",
+      coordinates:[longitude,latitude]
+    }
+    await axios.post(`${process.env.NEXT_BASE_URL}/api/socket/updateLocation`,{userId,location:locationData})
   })
   socket.on("disconnect",()=>{
     console.log("User Disconnected",socket.id);
