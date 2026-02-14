@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const user = await User.findOne({ role: "admin" });
-    if (user.length > 0) {
-      return NextResponse.json({ isAdmin: true }, { status: 200 });
+    if (user) {
+      return NextResponse.json({ adminExist: true }, { status: 200 });
     } else {
-      return NextResponse.json({ isAdmin: false }, { status: 200 });
+      return NextResponse.json({ adminExist: false }, { status: 200 });
     }
   } catch (error) {
     return NextResponse.json(
