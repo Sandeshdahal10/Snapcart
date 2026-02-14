@@ -24,34 +24,34 @@ function EditRoleMobile() {
   ]);
   const [selectedRole, setSelectedRole] = useState("");
   const [mobile, setMobile] = useState("");
-  const {update}=useSession()
-  const router=useRouter();
+  const { update } = useSession();
+  const router = useRouter();
   const handleEdit = async () => {
     try {
       const result = await axios.post("/api/user/edit-role-mobile", {
         role: selectedRole,
         mobile,
       });
-      await update({role:selectedRole})
+      await update({ role: selectedRole });
       router.push("/");
-      
     } catch (error) {
       console.log(error);
     }
   };
- 
-  useEffect(()=>{
-     const checkAdmin=async()=>{
-    try {
-      const result = await axios.get("/api/check-admin");
-      if(result.data.adminExist){
-        setRoles((prev)=>prev.filter((r)=>r.id!=="admin"))
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const result = await axios.get("/api/check-admin");
+        if (result.data.adminExist) {
+          setRoles((prev) => prev.filter((r) => r.id !== "admin"));
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  },[])
+    };
+    checkAdmin();
+  }, []);
   return (
     <div className="flex flex-col min-h-screen p-6 w-full items-center ">
       <motion.h1
