@@ -28,7 +28,7 @@ export async function POST(
               type: "Point",
               coordinates: [Number(longitude), Number(latitude)],
             },
-            $maxDistance: 10000, // 10km radius
+            $maxDistance: 50000 // 50 km
           },
         },
       });
