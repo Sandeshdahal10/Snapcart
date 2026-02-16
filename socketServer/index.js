@@ -36,7 +36,7 @@ io.on("connection",(socket)=>{
 })
 
 app.post("/notify",(req,res)=>{
-  const {socketId,event,data}=req.body;
+  const {event,data,socketId}=req.body;
   if(socketId){
     io.to(socketId).emit(event,data);
   }else{
