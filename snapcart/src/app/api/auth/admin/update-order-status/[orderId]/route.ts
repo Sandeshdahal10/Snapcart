@@ -29,7 +29,7 @@ export async function POST(
               type: "Point",
               coordinates: [Number(longitude), Number(latitude)],
             },
-            $maxDistance: 50000 // 50 km
+            $maxDistance: 50000, // 50 km
           },
         },
       });
@@ -46,7 +46,10 @@ export async function POST(
       const candidates = availableDeliveryBoys.map((b) => b._id);
       if (candidates.length == 0) {
         await order.save();
-        await emitEventHandler("order-status-update",{orderId:order._id,status:order.status})
+        await emitEventHandler("order-status-update", {
+          orderId: order._id,
+          status: order.status,
+        });
         return NextResponse.json(
           { message: "No Delivery Boys available" },
           { status: 200 },
@@ -57,6 +60,16 @@ export async function POST(
         broadcastedTo: candidates,
         status: "broadcasted",
       });
+      await deliveryAssignment.populate("order");
+      for (const boyId of candidates) {
+        const boy = await User.findById(boyId);
+        if (boy.socketId) {
+          await emitEventHandler(
+            "new-delivery-assignment",deliveryAssignment,boy.socketId
+          );
+        }
+      }
+
       order.assignment = deliveryAssignment._id;
       deliveryBoysPayload = availableDeliveryBoys.map((b) => ({
         id: b._id,
@@ -69,7 +82,10 @@ export async function POST(
     }
     await order.save();
     await order.populate("user");
-    await emitEventHandler("order-status-update",{orderId:order._id,status:order.status})
+    await emitEventHandler("order-status-update", {
+      orderId: order._id,
+      status: order.status,
+    });
     return NextResponse.json(
       {
         assignment: order.assignment?._id,
