@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest){
   try {
     await connectDb();
-    const orders=await Order.find({}).populate("user").sort({ createdAt: -1 });
+    const orders=await Order.find({}).populate("user assignedDeliveryBoy").sort({ createdAt: -1 });
     return NextResponse.json({orders},{status:200})
   } catch (error) {
     return NextResponse.json({error:"Internal Server Error"},{status:500})
