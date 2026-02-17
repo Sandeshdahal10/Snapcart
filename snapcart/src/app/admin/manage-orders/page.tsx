@@ -1,11 +1,44 @@
 "use client";
 import AdminOrderCard from "@/components/AdminOrderCard";
 import { getSocket } from "@/lib/socket";
-import { IOrder } from "@/models/order.model";
+import { IUser } from "@/models/user.model";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
+import mongoose from "mongoose";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: [
+    {
+      grocery: mongoose.Types.ObjectId;
+      name: string;
+      price: string;
+      unit: string;
+      image: string;
+      quantity: number;
+    },
+  ];
+  isPaid: boolean;
+  totalPrice: number;
+  paymentMethod: "COD" | "Online";
+  address: {
+    fullName: string;
+    pincode: string;
+    city: string;
+    state: string;
+    mobile: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  assignedDeliveryBoy?: IUser;
+  assignment?: mongoose.Types.ObjectId;
+  status: "Pending" | "Out for Delivery" | "Delivered";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 function ManageOrders() {
   const [orders, setOrders] = useState<IOrder[]>();
@@ -22,13 +55,13 @@ function ManageOrders() {
     getOrders();
   }, []);
 
-  useEffect(():any=>{
+  useEffect((): any => {
     const socket = getSocket();
-    socket?.on("new-order",(newOrder)=>{
-      setOrders((prev)=>[newOrder,...prev!])
-    })
-    return()=>socket.off("new-order")
-  },[])
+    socket?.on("new-order", (newOrder) => {
+      setOrders((prev) => [newOrder, ...prev!]);
+    });
+    return () => socket.off("new-order");
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       <div className="fixed top-0 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-50">
