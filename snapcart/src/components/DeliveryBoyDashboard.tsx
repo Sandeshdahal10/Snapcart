@@ -1,21 +1,21 @@
 "use client";
 import { getSocket } from "@/lib/socket";
+import { RootState } from "@/redux/store";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function DeliveryBoyDashboard() {
   const [assignments, setAssignments] = useState<any[]>([]);
-  useEffect(() => {
-    const fetchAssignments = async () => {
-      try {
-        const result = await axios.get("/api/delivery/get-assignments");
-        setAssignments(result.data.assignments);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAssignments();
-  }, []);
+  const { userData } = useSelector((state: RootState) => state.user);
+  const fetchAssignments = async () => {
+    try {
+      const result = await axios.get("/api/delivery/get-assignments");
+      setAssignments(result.data.assignments);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect((): any => {
     const socket = getSocket();
     socket.on("new-delivery-assignment", (deliveryAssignment) => {
@@ -33,6 +33,18 @@ function DeliveryBoyDashboard() {
       console.log(error);
     }
   };
+  const fetchCurrentOrder = async () => {
+    try {
+      const result = await axios.get("/api/delivery/current-order");
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchAssignments();
+    fetchCurrentOrder();
+  }, [userData]);
   return (
     <div className="w-full min-h-screen bg-gray-50 p-4">
       <div className="max-w-3xl mx-auto">
