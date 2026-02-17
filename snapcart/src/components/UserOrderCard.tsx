@@ -124,7 +124,7 @@ function UserOrderCard({ order }: { order: IOrder }) {
             Online Payment
           </div>
         )}
-        {order.assignedDeliveryBoy && (
+        {order.assignedDeliveryBoy && <>
           <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between">
             <div className="flex items-center gap-3 text-sm text-gray-700">
               <UserCheck className="text-blue-600" size={16} />
@@ -144,7 +144,12 @@ function UserOrderCard({ order }: { order: IOrder }) {
               Call
             </a>
           </div>
-        )}
+          <button className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow hover:bg-green-700 transition"><Truck size={16} />
+          Track Your Order
+        </button>
+        </>
+        }
+      
         <div className="flex items-center gap-2 text-gray-700 text-sm">
           <MapPin className="text-green-600" size={16} />
           <span className="truncate">{order.address.fullAddress}</span>
