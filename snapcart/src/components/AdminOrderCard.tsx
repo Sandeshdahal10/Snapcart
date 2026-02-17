@@ -17,7 +17,7 @@ import mongoose from "mongoose";
 import { motion } from "motion/react";
 import { div } from "motion/react-client";
 import Image from "next/image";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 interface IOrder {
   _id?: mongoose.Types.ObjectId;
@@ -55,7 +55,7 @@ interface IOrder {
 function AdminOrderCard({ order }: { order: IOrder }) {
   const status = ["Pending", "Out for Delivery"];
   const [expanded, setExpanded] = useState(false);
-  const [orderStatus, setOrderStatus] = useState<string>(order.status);
+  const [orderStatus, setOrderStatus] = useState<string>("pending");
   const updateStatus = async (orderId: string, status: string) => {
     try {
       const result = await axios.post(
@@ -68,6 +68,10 @@ function AdminOrderCard({ order }: { order: IOrder }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    setOrderStatus(order.status);
+  }, [orderStatus]);
   return (
     <motion.div
       key={order._id?.toString()}
