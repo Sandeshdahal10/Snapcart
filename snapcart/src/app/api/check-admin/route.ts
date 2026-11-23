@@ -1,8 +1,10 @@
+import connectDb from "@/lib/db";
 import User from "@/models/user.model";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    await connectDb();
     const user = await User.findOne({ role: "admin" });
     if (user) {
       return NextResponse.json({ adminExist: true }, { status: 200 });

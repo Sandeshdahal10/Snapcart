@@ -36,7 +36,7 @@ function GroceryCard({ item }: { item: IGrocery }) {
     >
       <div className="relative w-full aspect-4/3 bg-gray-50 overflow-hidden group">
         <Image
-          src={item.image}
+          src={item.image!}
           fill
           alt={item.name}
           sizes="(max-width: 768px) 100vw, 25vw"

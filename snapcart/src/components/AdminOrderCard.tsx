@@ -1,6 +1,7 @@
 "use client";
 
 import { IUser } from "@/models/user.model";
+import { getSocket } from "@/lib/socket";
 import axios from "axios";
 import {
   ChevronDown,
@@ -15,9 +16,8 @@ import {
 } from "lucide-react";
 import mongoose from "mongoose";
 import { motion } from "motion/react";
-import { div } from "motion/react-client";
 import Image from "next/image";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface IOrder {
   _id?: mongoose.Types.ObjectId;
@@ -55,23 +55,49 @@ interface IOrder {
 function AdminOrderCard({ order }: { order: IOrder }) {
   const status = ["Pending", "Out for Delivery"];
   const [expanded, setExpanded] = useState(false);
-  const [orderStatus, setOrderStatus] = useState<string>("pending");
+  const [orderStatus, setOrderStatus] = useState<string>(order.status);
+  const [isPaid, setIsPaid] = useState(order.isPaid);
+  const [notice, setNotice] = useState("");
   const updateStatus = async (orderId: string, status: string) => {
+    const previous = orderStatus;
+    setOrderStatus(status);
+    setNotice("");
     try {
       const result = await axios.post(
         `/api/auth/admin/update-order-status/${orderId}`,
         { status },
       );
-      console.log(result.data);
-      setOrderStatus(status);
-    } catch (error) {
-      console.log(error);
+      if (result.data.message === "No Delivery Boys available") {
+        setNotice("No delivery boys are free within 50 km. Set it back to Pending and try again later.");
+      } else if (status === "Out for Delivery") {
+        setNotice(`Sent to ${result.data.availableBoys?.length ?? 0} nearby delivery boy(s).`);
+      }
+    } catch (error: any) {
+      setOrderStatus(previous);
+      setNotice(error?.response?.data?.message || "Failed to update status.");
     }
   };
 
+  // Keep in sync if the parent list refreshes
   useEffect(() => {
     setOrderStatus(order.status);
-  }, [orderStatus]);
+    setIsPaid(order.isPaid);
+  }, [order.status, order.isPaid]);
+
+  // Live: delivery boy completed the order
+  useEffect(() => {
+    const socket = getSocket();
+    const onStatus = (data: any) => {
+      if (String(data.orderId) === String(order._id)) {
+        setOrderStatus(data.status);
+        if (data.isPaid) setIsPaid(true);
+      }
+    };
+    socket.on("order-status-update", onStatus);
+    return () => {
+      socket.off("order-status-update", onStatus);
+    };
+  }, [order._id]);
   return (
     <motion.div
       key={order._id?.toString()}
@@ -88,12 +114,12 @@ function AdminOrderCard({ order }: { order: IOrder }) {
           </p>
           <span
             className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
-              order.isPaid
+              isPaid
                 ? "bg-green-100 text-green-700 border-green-200"
                 : "bg-red-100 text-red-700 border-red-300"
             }`}
           >
-            {order.isPaid ? "paid" : "Unpaid"}
+            {isPaid ? "paid" : "Unpaid"}
           </span>
           <p className="text-gray-500 text-sm">
             {new Date(order.createdAt!).toLocaleString()}
@@ -156,6 +182,7 @@ function AdminOrderCard({ order }: { order: IOrder }) {
           >
             {orderStatus}
           </span>
+          {orderStatus !== "Delivered" && (
           <select
             className="border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none"
             value={orderStatus}
@@ -164,11 +191,19 @@ function AdminOrderCard({ order }: { order: IOrder }) {
             }
           >
             {status.map((stat) => (
-              <option key={stat} value={stat}>
+              <option
+                key={stat}
+                value={stat}
+                disabled={stat === "Pending" && !!order.assignedDeliveryBoy}
+              >
                 {stat.toUpperCase()}
               </option>
             ))}
           </select>
+          )}
+          {notice && (
+            <p className="text-xs text-gray-600 max-w-[220px] md:text-right">{notice}</p>
+          )}
         </div>
       </div>
       <div className="border-t border-gray-100 mt-3 pt-3">

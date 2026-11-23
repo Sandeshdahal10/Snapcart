@@ -1,9 +1,13 @@
 import connectDb from "@/lib/db";
 import User from "@/models/user.model";
+import { isFromSocketServer } from "@/lib/socketSecret";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest){
   try {
+    if (!isFromSocketServer(req)) {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
     await connectDb();
     const {userId,socketId}=await req.json();
     const user=await User.findByIdAndUpdate(userId,{socketId,isOnline:true},{new:true})

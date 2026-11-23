@@ -55,12 +55,19 @@ function ManageOrders() {
     getOrders();
   }, []);
 
-  useEffect((): any => {
+  useEffect(() => {
     const socket = getSocket();
-    socket?.on("new-order", (newOrder) => {
-      setOrders((prev) => [newOrder, ...prev!]);
-    });
-    return () => socket.off("new-order");
+    const onNewOrder = (newOrder: IOrder) => {
+      setOrders((prev) =>
+        prev?.some((o) => String(o._id) === String(newOrder._id))
+          ? prev
+          : [newOrder, ...(prev ?? [])],
+      );
+    };
+    socket.on("new-order", onNewOrder);
+    return () => {
+      socket.off("new-order", onNewOrder);
+    };
   }, []);
   return (
     <div className="min-h-screen bg-gray-50 w-full">
@@ -77,8 +84,11 @@ function ManageOrders() {
       </div>
       <div className="max-w-6xl mx-auto px-4 pt-24 pb-16 space-y-8">
         <div className="space-y-6">
-          {orders?.map((order, index) => (
-            <AdminOrderCard key={index} order={order} />
+          {orders?.length === 0 && (
+            <p className="text-center text-gray-500 py-16">No orders yet.</p>
+          )}
+          {orders?.map((order) => (
+            <AdminOrderCard key={String(order._id)} order={order} />
           ))}
         </div>
       </div>

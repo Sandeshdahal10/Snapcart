@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronUp,
   CreditCard,
+  KeyRound,
   MapPin,
   Package,
   Scooter,
@@ -15,8 +16,8 @@ import {
 } from "lucide-react";
 import mongoose from "mongoose";
 import { motion } from "motion/react";
-import { div } from "motion/react-client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 interface IOrder {
   _id?: mongoose.Types.ObjectId;
@@ -47,13 +48,18 @@ interface IOrder {
   assignedDeliveryBoy?: IUser;
   assignment?: mongoose.Types.ObjectId;
   status: "Pending" | "Out for Delivery" | "Delivered";
+  deliveryOtp?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 function UserOrderCard({ order }: { order: IOrder }) {
   const [expanded, setExpanded] = useState(false);
+  const router = useRouter();
   const [status, setStatus] = useState(order.status);
+  const [deliveryBoy, setDeliveryBoy] = useState(order.assignedDeliveryBoy);
+  const [deliveryOtp, setDeliveryOtp] = useState(order.deliveryOtp);
+  const [isPaid, setIsPaid] = useState(order.isPaid);
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Pending":
@@ -66,15 +72,28 @@ function UserOrderCard({ order }: { order: IOrder }) {
         return "bg-gray-100 text-gray-700 border-gray-300";
     }
   };
-  useEffect((): any => {
+  useEffect(() => {
     const socket = getSocket();
-    socket.on("order-status-update", (data) => {
-      if (data.orderId.toString() === order._id!.toString()) {
+    const onStatus = (data: any) => {
+      if (String(data.orderId) === String(order._id)) {
         setStatus(data.status);
+        if (data.isPaid) setIsPaid(true);
       }
-    });
-    return () => socket.off("order-status-update");
-  }, []);
+    };
+    // Sent only to this customer when a delivery boy accepts the order
+    const onAssigned = (data: any) => {
+      if (String(data.orderId) === String(order._id)) {
+        setDeliveryBoy(data.assignedDeliveryBoy);
+        setDeliveryOtp(data.deliveryOtp);
+      }
+    };
+    socket.on("order-status-update", onStatus);
+    socket.on("delivery-assigned", onAssigned);
+    return () => {
+      socket.off("order-status-update", onStatus);
+      socket.off("delivery-assigned", onAssigned);
+    };
+  }, [order._id]);
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -97,12 +116,12 @@ function UserOrderCard({ order }: { order: IOrder }) {
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={`px-3 py-1 text-xs font-semibold rounded-full border ${
-              order.isPaid
+              isPaid
                 ? "bg-green-100 text-green-700 border-green-300"
                 : "bg-red-100 text-red-700 border-red-300"
             }`}
           >
-            {order.isPaid ? "paid" : "not paid yet"}
+            {isPaid ? "paid" : "not paid yet"}
           </span>
           <span
             className={`px-3 py-1 text-xs font-semibold border rounded-full ${getStatusColor(status)}`}
@@ -124,29 +143,45 @@ function UserOrderCard({ order }: { order: IOrder }) {
             Online Payment
           </div>
         )}
-        {order.assignedDeliveryBoy && <>
+        {deliveryBoy && status !== "Delivered" && <>
           <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between">
             <div className="flex items-center gap-3 text-sm text-gray-700">
               <UserCheck className="text-blue-600" size={16} />
               <div className="font-semibold text-gray-800">
                 <p className="text-xs text-gray-600">
-                  Assigned To: <span>{order.assignedDeliveryBoy?.name}</span>
+                  Assigned To: <span>{deliveryBoy?.name}</span>
                 </p>
                 <p className="text-xs text-gray-600">
-                  📱+977{order.assignedDeliveryBoy?.mobile}
+                  📱+977{deliveryBoy?.mobile}
                 </p>
               </div>
             </div>
             <a
-              href={`tel:+977${order.assignedDeliveryBoy.mobile}`}
+              href={`tel:+977${deliveryBoy.mobile}`}
               className=" shrink-0 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition"
             >
               Call
             </a>
           </div>
-          <button className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow hover:bg-green-700 transition"><Truck size={16} />
-          Track Your Order
-        </button>
+          {deliveryOtp && (
+            <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-3 flex items-center gap-3 text-sm">
+              <KeyRound className="text-yellow-700" size={18} />
+              <span className="text-gray-700">
+                Delivery code:{" "}
+                <b className="tracking-[0.3em] text-gray-900">{deliveryOtp}</b>
+                <span className="block text-xs text-gray-500">
+                  Give this to the delivery boy when you receive the order.
+                </span>
+              </span>
+            </div>
+          )}
+          <button
+            className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow hover:bg-green-700 transition"
+            onClick={() => router.push(`/user/track-order/${order._id}`)}
+          >
+            <Truck size={16} />
+            Track Your Order
+          </button>
         </>
         }
       

@@ -25,7 +25,6 @@
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
 
 export async function proxy(req:NextRequest){
   const {pathname}=req.nextUrl;
@@ -37,9 +36,11 @@ export async function proxy(req:NextRequest){
   }
 
   const token=await getToken({req,secret:process.env.AUTH_SECRET})
-  console.log(token);
-  console.log(req.url);
   if(!token){
+    // API callers (axios) need a JSON error, not the HTML of the login page
+    if(pathname.startsWith("/api/")){
+      return NextResponse.json({message:"Not authenticated"},{status:401});
+    }
     const loginUrl=new URL('/login',req.url);
     loginUrl.searchParams.set('callbackUrl',req.url);
     return NextResponse.redirect(loginUrl);

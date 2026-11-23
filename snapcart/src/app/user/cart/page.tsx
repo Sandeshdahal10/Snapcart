@@ -69,7 +69,7 @@ function CartPage() {
                 >
                   <div className="relative w-28 h-28 sm:w-24 sm:h-24 md:w-28 md:h-28 shrink-0 rounded-xl overflow-hidden bg-gray-50">
                     <Image
-                      src={item.image}
+                      src={item.image!}
                       alt={item.name}
                       fill
                       className="object-contain p-3 transition-transform duration-300 hover:scale-105"

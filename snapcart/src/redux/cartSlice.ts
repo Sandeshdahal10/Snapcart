@@ -30,7 +30,12 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     setCartData: (state, action: PayloadAction<IGrocery>) => {
-      state.cartData.push(action.payload);
+      const existing = state.cartData.find((i) => i._id == action.payload._id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        state.cartData.push(action.payload);
+      }
       cartSlice.caseReducers.calculateFee(state);
     },
     increaseQuantity: (
@@ -59,6 +64,15 @@ const cartSlice = createSlice({
       state.cartData = state.cartData.filter((i) => i._id !== action.payload);
       cartSlice.caseReducers.calculateFee(state);
     },
+    clearCart: (state) => {
+      state.cartData = [];
+      cartSlice.caseReducers.calculateFee(state);
+    },
+    /** Restores the cart saved in localStorage (see StoreProvider). */
+    hydrateCart: (state, action: PayloadAction<IGrocery[]>) => {
+      state.cartData = Array.isArray(action.payload) ? action.payload : [];
+      cartSlice.caseReducers.calculateFee(state);
+    },
     calculateFee: (state) => {
       state.subTotal = state.cartData.reduce(
         (sum, item) => sum + Number(item.price) * item.quantity,
@@ -75,6 +89,8 @@ export const {
   increaseQuantity,
   decreaseQuantity,
   removeFromCart,
+  clearCart,
+  hydrateCart,
   calculateFee,
 } = cartSlice.actions;
 export default cartSlice.reducer;

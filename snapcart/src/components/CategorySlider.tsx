@@ -13,7 +13,7 @@ import {
   Milk,
   Wheat,
 } from "lucide-react";
-import { color } from "motion";
+import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 
@@ -89,17 +89,23 @@ function CategorySlider() {
         {categories.map((category) => {
           const Icon = category.icon;
           return (
-            <motion.div
+            <Link
               key={category.id}
+              href={`/?category=${encodeURIComponent(category.name)}`}
+              scroll={false}
+              className="shrink-0"
+            >
+            <motion.div
               className={`min-w-[150px] md:min-w-[180px] flex flex-col items-center justify-center rounded-2xl ${category.color} shadow-md hover:shadow-xl transition-all cursor-pointer`}
             >
               <div className="flex flex-col items-center justify-center p-5">
                 <Icon className="w-10 h-10 text-green-700 mb-3" />
-                <p className="text-center text-sm md:text-base font-semibold text-gray-700x`">
+                <p className="text-center text-sm md:text-base font-semibold text-gray-700">
                   {category.name}
                 </p>
               </div>
             </motion.div>
+            </Link>
           );
         })}
       </div>

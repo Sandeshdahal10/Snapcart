@@ -7,9 +7,17 @@ export async function GET(req: NextRequest) {
   try {
     await connectDb();
     const session = await auth();
-    const orders = await Order.find({ user: session?.user?.id }).populate(
-      "user assignedDeliveryBoy",
-    ).sort({ createdAt: -1 });
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+    }
+    // name + mobile is all the customer needs to see about the delivery boy
+    // Hide online orders whose payment was never completed (same rule as the admin list)
+    const orders = await Order.find({
+      user: session.user.id,
+      $or: [{ paymentMethod: "COD" }, { isPaid: true }],
+    })
+      .populate("assignedDeliveryBoy", "name mobile")
+      .sort({ createdAt: -1 });
     if (!orders) {
       return new NextResponse(JSON.stringify({ message: "No orders found" }), {
         status: 400,

@@ -29,6 +29,8 @@ export interface IOrder {
   assignedDeliveryBoy?: mongoose.Types.ObjectId;
   assignment?: mongoose.Types.ObjectId;
   status: "Pending" | "Out for Delivery" | "Delivered";
+  deliveryOtp?: string | null;
+  deliveredAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -74,6 +76,9 @@ const orderSchema = new mongoose.Schema<IOrder>(
       default: null,
     },
     assignedDeliveryBoy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    // 4-digit code shown to the customer; the delivery boy enters it to complete the delivery
+    deliveryOtp: { type: String, default: null },
+    deliveredAt: { type: Date },
   },
   { timestamps: true },
 );

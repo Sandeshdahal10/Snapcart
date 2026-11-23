@@ -1,10 +1,17 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { clearCart } from "@/redux/cartSlice";
 import { motion } from "motion/react";
 import { ArrowRight, Check, CheckCircle, Package } from "lucide-react";
 import Link from "next/link";
 
 function OrderSuccess() {
+  const dispatch = useDispatch();
+  // Online payments land here from Stripe, so empty the cart here too
+  useEffect(() => {
+    dispatch(clearCart());
+  }, [dispatch]);
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center bg-linear-to-b from-green-50 to-white">
       <motion.div
@@ -46,8 +53,8 @@ function OrderSuccess() {
         className="mt-4 text-sm md:text-base text-gray-600 max-w-md"
       >
         Thank you for your purchase. Your order is being processed and will be
-        shipped to you soon.
-        <span className="font-semibold text-green-700">My Orders</span>
+        shipped to you soon. You can follow it in{" "}
+        <span className="font-semibold text-green-700">My Orders</span>.
       </motion.p>
       <motion.div
         initial={{ opacity: 0, y: 40 }}

@@ -40,10 +40,13 @@ const connectDb = async () => {
   }
 
   try {
-    const connection = await cached.promise;
-    return connection;
+    cached.connection = await cached.promise;
+    return cached.connection;
   } catch (error) {
-    console.log(error);
+    // Forget the failed attempt so the next request tries to connect again
+    cached.promise = null;
+    console.log("MongoDB connection error:", error);
+    throw error;
   }
 };
 

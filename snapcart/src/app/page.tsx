@@ -21,7 +21,11 @@ import { redirect } from "next/navigation";
  *
  * This function runs on the server and performs redirects via Next.js server-side APIs.
  */
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; category?: string }>;
+}) {
   await connectDb();
   const session = await auth();
 
@@ -40,7 +44,7 @@ export default async function Home() {
       <Nav user={plainUser} />
       <GeoMapUpdater userId={plainUser._id} />
       {user.role === "user" ? (
-        <UserDashboard />
+        <UserDashboard {...await searchParams} />
       ) : user.role === "admin" ? (
         <AdminDashboard />
       ) : (

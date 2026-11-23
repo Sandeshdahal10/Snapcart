@@ -1,9 +1,13 @@
 import connectDb from "@/lib/db";
 import User from "@/models/user.model";
+import { isFromSocketServer } from "@/lib/socketSecret";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    if (!isFromSocketServer(req)) {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
     await connectDb();
     const { userId, location } = await req.json();
     if (!userId || !location) {
@@ -17,7 +21,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "User not found" }, { status: 400 });
     }
     return NextResponse.json(
-      { message: "User location updated successfully" },
+      { message: "User location updated successfully", role: user.role },
       { status: 200 },
     );
   } catch (error) {

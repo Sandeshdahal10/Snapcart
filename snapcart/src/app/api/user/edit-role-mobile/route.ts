@@ -8,6 +8,22 @@ export async function POST(req: NextRequest) {
     await connectDb();
     const { role, mobile } = await req.json();
     const session = await auth();
+    if (!session?.user?.email) {
+      return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+    }
+    if (!["user", "deliveryBoy", "admin"].includes(role)) {
+      return NextResponse.json({ message: "Invalid role" }, { status: 400 });
+    }
+    if (!/^\d{10}$/.test(String(mobile ?? ""))) {
+      return NextResponse.json({ message: "Mobile must be 10 digits" }, { status: 400 });
+    }
+    // Only one admin: once an admin exists, nobody else can pick that role
+    if (role === "admin") {
+      const existingAdmin = await User.findOne({ role: "admin" });
+      if (existingAdmin && existingAdmin.email !== session.user.email) {
+        return NextResponse.json({ message: "An admin already exists" }, { status: 403 });
+      }
+    }
     const user = await User.findOneAndUpdate(
       { email: session?.user?.email },
       {

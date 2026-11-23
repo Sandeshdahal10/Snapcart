@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import mongoose from "mongoose";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
@@ -36,6 +37,14 @@ function Nav({ user }: { user: IUser }) {
   const profileDropDown = useRef<HTMLDivElement>(null);
   const [searchBarOpen, setSearchBarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const router = useRouter();
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchText.trim();
+    setSearchBarOpen(false);
+    router.push(q ? `/?q=${encodeURIComponent(q)}` : "/");
+  };
   const {cartData}=useSelector((state: RootState)=>state.cart)
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -123,7 +132,7 @@ function Nav({ user }: { user: IUser }) {
                 <PlusCircle className="w-5 h-5" /> Add Grocery
               </Link>
               <Link
-                href={""}
+                href={"/admin/view-grocery"}
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/10 hover:bg-white/20 hover:pl-4 transition-all"
               >
                 <Boxes className="w-5 h-5" /> View Products
@@ -138,7 +147,7 @@ function Nav({ user }: { user: IUser }) {
             <div className="my-5 border-t border-white/20"></div>
             <div
               className="flex items-center gap-3 text-red-300 font-semibold mt-auto hover:bg-red-500/20 p-3 rounded-lg transition-all "
-              onClick={async () => await signOut({ callbackURL: "/" })}
+              onClick={async () => await signOut({ callbackUrl: "/login" })}
             >
               <LogOut className="w-5 h-5 text-red-300" />
               Log Out
@@ -158,10 +167,15 @@ function Nav({ user }: { user: IUser }) {
         Snapcart
       </Link>
       {user.role == "user" && (
-        <form className="hidden md:flex items:center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
+        <form
+          onSubmit={handleSearch}
+          className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md"
+        >
           <Search className="text-gray-500 w-5 h-5 mr-2" />
           <input
             type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search groceries..."
             className="w-full outline-none text-gray-700 placeholder-gray-400"
           />
@@ -199,7 +213,7 @@ function Nav({ user }: { user: IUser }) {
                 <PlusCircle className="w-5 h-5" /> Add Grocery
               </Link>
               <Link
-                href={""}
+                href={"/admin/view-grocery"}
                 className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all"
               >
                 <Boxes className="w-5 h-5" /> View Products
@@ -317,9 +331,12 @@ function Nav({ user }: { user: IUser }) {
                 className="fixed top-24 left-1/2 -translate-x-1/2 w-[90%] bg-white rounded-full shadow-lg z-40 flex items-center px-4 py-2"
               >
                 <Search className="text-gray-500 w-5 h-5 mr-2" />
-                <form className="grow">
+                <form className="grow" onSubmit={handleSearch}>
                   <input
                     type="text"
+                    autoFocus
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
                     className="w-full outline-none text-gray-700"
                     placeholder="Search groceries..."
                   />

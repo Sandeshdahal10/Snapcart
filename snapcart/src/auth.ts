@@ -74,15 +74,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return true;
     },
-    jwt({ token, user,trigger,session }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
-        (token.id = user.id),
-          (token.name = user.name),
-          (token.email = user.email),
-          (token.role = user.role);
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.role = user.role;
       }
-      if(trigger=="update"){
-        token.role=session.role
+      if (trigger == "update") {
+        // Never trust a role sent from the browser: read it from the database
+        await connectDb();
+        const dbUser = await User.findById(token.id).select("role");
+        if (dbUser) token.role = dbUser.role;
       }
       return token;
     },

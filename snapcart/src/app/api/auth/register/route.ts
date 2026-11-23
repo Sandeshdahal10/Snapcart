@@ -7,6 +7,16 @@ export async function POST(req: NextRequest) {
   try {
     await connectDb();
     const { name, email, password } = await req.json();
+    if (
+      typeof name !== "string" || !name.trim() ||
+      typeof email !== "string" || !email.trim() ||
+      typeof password !== "string"
+    ) {
+      return NextResponse.json(
+        { message: "Name, email and password are required" },
+        { status: 400 }
+      );
+    }
     const existUser = await User.findOne({ email });
     if (existUser) {
       return NextResponse.json(
@@ -31,9 +41,11 @@ export async function POST(req: NextRequest) {
       email,
       password: hashedPassword,
     });
+    // Never send the password hash back to the browser
+    const { password: _password, ...safeUser } = user.toObject();
     return NextResponse.json(
       {
-        user,
+        user: safeUser,
       },
       { status: 200 }
     );

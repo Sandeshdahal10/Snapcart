@@ -16,9 +16,10 @@ function MyOrder() {
       try {
         const result = await axios.get("/api/user/my-orders");
         setOrders(result.data.orders);
-        setLoading(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     getMyOrders();
@@ -58,14 +59,14 @@ function MyOrder() {
           </div>
         ) : (
           <div className="mt-4 space-y-6">
-            {orders?.map((order, index) => (
+            {orders?.map((order) => (
               <motion.div
-                key={index}
+                key={String(order._id)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <UserOrderCard order={order} />
+                <UserOrderCard order={order as React.ComponentProps<typeof UserOrderCard>["order"]} />
               </motion.div>
             ))}
           </div>
